@@ -19,7 +19,7 @@ module.exports = async (ctx, next) => {
 
   // trying to find token in our models
   try {
-    tokenExists = await ctx.models.tokens.checkAccessToken(decoded.tokenUuid);
+    tokenExists = await ctx.models.tokens.checkAccessToken(decoded.tokenId);
   } catch (err) {
     console.error(err);
     ctx.throw(500, "server error", {

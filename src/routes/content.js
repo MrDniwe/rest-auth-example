@@ -7,8 +7,8 @@ module.exports = (config) => {
     prefix: config.prefix + '/content',
   });
 
-  route.get('/public', controllers.dummy);
-  route.get('/protected', jwtCheck, controllers.dummy);
+  route.get('/public', controllers.content.public);
+  route.get('/protected', jwtCheck, controllers.content.protected);
 
   return route;
 };

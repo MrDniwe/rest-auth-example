@@ -17,19 +17,19 @@ module.exports = class UsersModel {
     return [...this._initialState];
   }
 
-  clearAll() {
+  async clearAll() {
     this.store = this.initialState;
   }
 
-  userExists(login) {
+  async userExists(login) {
     return this.store.findIndex(item => item.login === login) >= 0;
   }
 
-  userHasPassword(login, password) {
+  async userHasPassword(login, password) {
     return this.store.findIndex(item => item.login === login && item.password === md5(password)) >= 0;
   }
 
-  getByLogin(login) {
+  async getByLogin(login) {
     return _.omit(this.store.find(item => item.login === login), ["pasword"]);
   }
 

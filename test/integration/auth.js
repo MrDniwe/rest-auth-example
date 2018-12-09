@@ -27,7 +27,8 @@ module.exports = (app, models, config) => {
         let r = await request.post(`${prefix}/auth/log-in`).send(users.valid);
         expect(r).to.have.status(201);
         expect(r.body).to.have.all.keys([
-          "accessToken"
+          "accessToken",
+          "expiresIn"
         ]);
       });
       it("With invalid login", async () => {
@@ -41,10 +42,26 @@ module.exports = (app, models, config) => {
     });
 
     describe("POST /auth/log-out", () => {
-      it.skip("Without token", async () => { });
-      it.skip("With wrong token", async () => { });
-      it.skip("With right token", async () => { });
-      it.skip("Try yo use token after log-out", async () => { });
+      let token;
+      it("Without token", async () => {
+        let r = await request.post(`${prefix}/auth/log-out`);
+        expect(r).to.have.status(401);
+      });
+      it("With wrong token", async () => {
+        let r = await request.post(`${prefix}/auth/log-out`).set({ authorization: "some-wrong-token" });
+        expect(r).to.have.status(401);
+      });
+      it("With right token", async () => {
+        let r = await request.post(`${prefix}/auth/log-in`).send(users.valid);
+        expect(r).to.have.status(201);
+        token = r.body.accessToken;
+        r = await request.post(`${prefix}/auth/log-out`).set({ authorization: token });
+        expect(r).to.have.status(204);
+      });
+      it("Try yo use token after log-out", async () => {
+        let r = await request.get(`${prefix}/content/protected`).set({ authorization: token });
+        expect(r).to.have.status(401);
+      });
     });
 
   });
