@@ -5,6 +5,13 @@ chai.use(chaiHttp);
 
 let request, prefix;
 
+const users = {
+  valid: {
+    login: "user",
+    password: "password"
+  }
+};
+
 module.exports = (app, models, config) => {
   describe("Auth methods", () => {
     before(async () => {
@@ -16,9 +23,21 @@ module.exports = (app, models, config) => {
     after(() => request.close());
 
     describe("POST /auth/log-in", () => {
-      it.skip("With valid data", async () => { });
-      it.skip("With invalid login", async () => { });
-      it.skip("With invalid password", async () => { });
+      it("With valid data", async () => {
+        let r = await request.post(`${prefix}/auth/log-in`).send(users.valid);
+        expect(r).to.have.status(201);
+        expect(r.body).to.have.all.keys([
+          "accessToken"
+        ]);
+      });
+      it("With invalid login", async () => {
+        let r = await request.post(`${prefix}/auth/log-in`).send({ ...users.valid, login: "wrong" });
+        expect(r).to.have.status(404);
+      });
+      it("With invalid password", async () => {
+        let r = await request.post(`${prefix}/auth/log-in`).send({ ...users.valid, password: "wrong" });
+        expect(r).to.have.status(401);
+      });
     });
 
     describe("POST /auth/log-out", () => {

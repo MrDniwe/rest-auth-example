@@ -18,6 +18,7 @@
     "koa": "^2.6.2",
     "koa-better-body": "^3.0.4",
     "koa-router": "^7.4.0",
+    "lodash": "^4.17.11",
     "mocha": "^5.2.0"
   }
 }
